@@ -1,0 +1,69 @@
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
+
+typedef struct _fdate
+{
+	int fd;
+	int mode;
+	int level;
+	int maxsize;
+	int maxnum;
+	_fdate():
+		fd(-1),mode(0),level(0),maxsize(10),maxnum(10){};
+}fdate;
+
+static int open(lua_State *L)
+{
+	fdate *fd = new fdate;
+	lua_pushlightuserdata(L,&fd);
+	return 1;
+}
+
+static int close(lua_State *L)
+{
+	delete *(fdate **)luaL_checkuserdata(L, -1);
+	return 0;
+}
+static int getlevel(lua_State *L)
+{
+	lua_pushstring(L, "unimplememt");
+	return 1;
+}
+
+static int setlevel(lua_State *L)
+{
+	return 0;
+}
+
+static int log(lua_State *L)
+{
+	lua_pushstring(L, "unimplenment");
+	return 1;
+}
+
+static const struct luaL_Reg mylib[] =
+{
+	{"open", open},
+	{"close", close},
+	{"setlevel", setlevel},
+	{"getlevel", getlevel},
+	{"log", log},
+	{NULL, NULL}
+};
+
+LUALIB_API int luaopen_mylib(lua_State *L)
+{
+	luaL_register(L, "liblog", mylib);
+	return 0;
+}
+
+#ifdef __cplusplus
+}
+#endif
